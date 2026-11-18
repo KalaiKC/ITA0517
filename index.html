@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMATS Computer Vision Lab Experiments - All 40 Experiments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #121826;
+            --bg-card: #182234;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.25);
+            --accent-hover: #60a5fa;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #243049;
+            --tag-bg: #1e293b;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 1rem 2.5rem;
+            background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0b0f19 80%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: #fff;
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 750px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+
+        .stat-item strong {
+            color: var(--accent-hover);
+            font-size: 1.1rem;
+        }
+
+        .filter-nav {
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            background: rgba(18, 24, 38, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 0.8rem 1.2rem;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2.5rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .filter-nav input {
+            flex: 1;
+            min-width: 250px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .filter-nav input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .exp-number {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-hover);
+            background: rgba(59, 130, 246, 0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.4;
+        }
+
+        .card-image-wrap {
+            width: 100%;
+            background: #000;
+            border-bottom: 1px solid var(--border-color);
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .card-image-wrap img:hover {
+            transform: scale(1.02);
+        }
+
+        .card-body {
+            padding: 1.25rem 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .code-snippet-wrap {
+            position: relative;
+            background: #0c1017;
+            border: 1px solid #1f293d;
+            border-radius: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        pre {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.78rem;
+            padding: 0.85rem;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .card-footer {
+            padding: 0.85rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-view {
+            color: var(--accent-hover);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-view:hover {
+            text-decoration: underline;
+        }
+
+        /* Lightbox modal */
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        #lightbox.active {
+            display: flex;
+        }
+
+        #lightbox img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        #lightbox-close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="badge">SIMATS Engineering • Lab Portfolio</span>
+        <h1>Computer Vision Lab Experiments</h1>
+        <p class="subtitle">Complete implementation, automated execution, and output verification for all 40 laboratory experiments in the curriculum.</p>
+        <div class="stats-bar">
+            <div class="stat-item">Total Experiments: <strong>40 / 40 Complete</strong></div>
+            <div class="stat-item">Source Code: <strong>code/ Directory</strong></div>
+            <div class="stat-item">Lab Report: <strong>Computer_Vision_Lab_Record_All_40_Experiments.docx</strong></div>
+        </div>
+    </header>
+
+    <div class="filter-nav">
+        <input type="text" id="searchInput" placeholder="Search experiment name, topic, or keyword (e.g., 'rotation', 'face', 'sobel')...">
+    </div>
+
+    <div class="grid" id="experimentsGrid">
+        <!-- Rendered by JS -->
+    </div>
+</div>
+
+<div id="lightbox" onclick="closeLightbox(event)">
+    <span id="lightbox-close">&times;</span>
+    <img id="lightboxImg" src="" alt="Expanded View">
+</div>
+
+<script>
+const experiments = [
+    {id: 1, title: "Image Handling: Read & Convert to Gray-scale", file: "exp01_grayscale", desc: "Read color image and convert to single-channel 8-bit grayscale using cv2.cvtColor(..., cv2.COLOR_BGR2GRAY)."},
+    {id: 2, title: "Convert Image to Blur using Gaussian Blur", file: "exp02_gaussian_blur", desc: "Applies 2D Gaussian convolution kernel (15x15) to eliminate high frequency noise and details."},
+    {id: 3, title: "Outline Extraction using Canny Function", file: "exp03_canny_outline", desc: "Multi-stage edge detector computing gradient magnitudes with hysteresis thresholding."},
+    {id: 4, title: "Histogram Equalization & Contrast Comparison", file: "exp04_histogram_equalization", desc: "Non-linear intensity transformation to achieve a uniform cumulative histogram distribution."},
+    {id: 5, title: "Analyze Histogram Based on Color Levels (RGB)", file: "exp05_color_histogram", desc: "Calculates individual frequency distributions for Blue, Green, and Red color channels using cv2.calcHist()."},
+    {id: 6, title: "Image Erosion using Erode Function", file: "exp06_erode", desc: "Morphological erosion with a 5x5 structuring element to strip outer boundaries and isolated noise."},
+    {id: 7, title: "Video Processing: Slow & Fast Motion", file: "exp07_slow_fast_motion", desc: "Frames playback manipulation via delay control (80ms for slow motion vs 8ms for accelerated playback)."},
+    {id: 8, title: "Dilate an Image using Dilate Function", file: "exp08_dilate", desc: "Morphological dilation expanding white foreground pixels and connecting broken contours."},
+    {id: 9, title: "Image Scaling Techniques (Bigger & Smaller)", file: "exp09_image_scaling", desc: "Spatial resampling using cv2.resize with INTER_AREA for downsampling and INTER_CUBIC for enlargement."},
+    {id: 10, title: "90-Degree Clockwise Rotation", file: "exp10_rotate_90", desc: "Rotates coordinate grid 90 degrees clockwise using cv2.ROTATE_90_CLOCKWISE."},
+    {id: 11, title: "180-Degree Clockwise Rotation", file: "exp11_rotate_180", desc: "Inverts image along both axes using cv2.ROTATE_180."},
+    {id: 12, title: "270-Degree Clockwise Rotation", file: "exp12_rotate_270", desc: "Performs 270 degree rotation clockwise (equivalent to 90 degrees counter-clockwise)."},
+    {id: 13, title: "Affine Transformation on Given Image", file: "exp13_affine_transformation", desc: "Maps 3 non-collinear reference points to new locations using cv2.getAffineTransform and warpAffine."},
+    {id: 14, title: "Perspective Transformation on Given Image", file: "exp14_perspective_transformation", desc: "Homography transformation mapping 4 arbitrary quadrilateral corner points to a bird's eye view."},
+    {id: 15, title: "Harris Corner Detection", file: "exp15_harris_corners", desc: "Eigenvalue-based local structure tensor analysis isolating corners with large gradient variance."},
+    {id: 16, title: "Sobel Algorithm Filtering (X, Y, Combined)", file: "exp16_sobel_filter", desc: "Calculates directional derivatives along horizontal (dx) and vertical (dy) directions to highlight edges."},
+    {id: 17, title: "Watermarking Technique using OpenCV", file: "exp17_watermarking", desc: "Blends transparent logo into target image ROI using weighted linear superposition (cv2.addWeighted)."},
+    {id: 18, title: "Image Cropping, Copying & Pasting ROI", file: "exp18_roi_crop_paste", desc: "Extracts bounding box coordinates of ROI and replicates into arbitrary target matrix location."},
+    {id: 19, title: "Erosion Morphological Operations Technique", file: "exp19_morph_erosion", desc: "Iterative morphological erosion reducing boundary thickness of target structures."},
+    {id: 20, title: "Dilation Morphological Operations Technique", file: "exp20_morph_dilation", desc: "Iterative morphological dilation bridging small gaps and reinforcing structural edges."},
+    {id: 21, title: "Opening Morphological Operation", file: "exp21_morph_opening", desc: "Erosion followed by dilation removing salt-and-pepper noise without altering object volume."},
+    {id: 22, title: "Closing Morphological Operation", file: "exp22_morph_closing", desc: "Dilation followed by erosion filling small interior holes and concave bays in foreground masks."},
+    {id: 23, title: "Top Hat Morphological Operation", file: "exp23_morph_tophat", desc: "Subtracts the opened image from the original, highlighting structures brighter than surroundings."},
+    {id: 24, title: "Black Hat Morphological Operation", file: "exp24_morph_blackhat", desc: "Subtracts the original image from the closed image, extracting structures darker than surroundings."},
+    {id: 25, title: "Recognize Watch by Object Recognition", file: "exp25_watch_recognition", desc: "Detects watch dial perimeter using Hough Gradient Circle transform and localized bounding boxes."},
+    {id: 26, title: "Reverse Video Frames into Reverse Video", file: "exp26_reverse_video", desc: "Buffers frames into list, inverses indices, and writes reversed sequence into an MP4 container."},
+    {id: 27, title: "Face Detection Algorithm using OpenCV", file: "exp27_face_detection", desc: "Detects human faces with bounding box annotations and confidence metrics using OpenCV Face Detector."},
+    {id: 28, title: "Vehicle Detection Algorithm in Video", file: "exp28_vehicle_detection", desc: "Extracts moving vehicle foreground silhouettes using MOG2 background subtractor and area filters."},
+    {id: 29, title: "Eye Detection Algorithm using OpenCV", file: "exp29_eye_detection", desc: "Pinpoints Left and Right eye landmark coordinates on localized face bounding areas."},
+    {id: 30, title: "Smile Detection Algorithm using OpenCV", file: "exp30_smile_detection", desc: "Locates mouth corner landmark vectors to detect and outline human smile regions."},
+    {id: 31, title: "Image Segmentation Based on Thresholds", file: "exp31_segmentation_threshold", desc: "Compares Global Binary, Otsu's Optimum Bimodal, and Adaptive Gaussian thresholding algorithms."},
+    {id: 32, title: "White Image with 4 Corner Colored Boxes", file: "exp32_corner_boxes", desc: "Constructs 255-value canvas and colors 1/10th size corner boxes (Black, Blue, Green, Red)."},
+    {id: 33, title: "Draw Rectangle Shape on White Canvas", file: "exp33_draw_rectangle", desc: "Initializes blank image matrix and renders geometric rectangle using cv2.rectangle."},
+    {id: 34, title: "Draw Circle Shape on White Canvas", file: "exp34_draw_circle", desc: "Draws smooth anti-aliased circle with defined center coordinate and radius using cv2.circle."},
+    {id: 35, title: "Render User Text String on Given Image", file: "exp35_put_text", desc: "Overlays customized typography text onto target image using cv2.putText with anti-aliasing."},
+    {id: 36, title: "Subtract Background Based on Color Levels", file: "exp36_subtract_background", desc: "Isolates HSV color ranges belonging to the background to mask them out and preserve foreground."},
+    {id: 37, title: "Subtract Foreground Based on Color Levels", file: "exp37_subtract_foreground", desc: "Identifies HSV color bands of foreground objects to subtract them and preserve background alone."},
+    {id: 38, title: "Count Number of Faces in Input Image", file: "exp38_count_faces", desc: "Detects multiple individuals in group photos, tags individual face indices, and displays total count."},
+    {id: 39, title: "Play Video in Reverse Mode in Slow Motion", file: "exp39_reverse_slow_motion", desc: "Generates reverse chronological frame sequence while reducing frame rate to 5 FPS for slow motion."},
+    {id: 40, title: "Extract Text Regions from Videos", file: "exp40_extract_text_video", desc: "Detects horizontal high-contrast text lines across video frames and crops text regions of interest."}
+];
+
+const grid = document.getElementById('experimentsGrid');
+
+function render(list) {
+    grid.innerHTML = list.map(item => `
+        <div class="card" data-title="${item.title.toLowerCase()} ${item.desc.toLowerCase()}">
+            <div class="card-header">
+                <span class="exp-number">Experiment ${item.id.toString().padStart(2, '0')}</span>
+                <h3 class="card-title">${item.title}</h3>
+            </div>
+            <div class="card-image-wrap">
+                <img src="results/${item.file}.png" alt="${item.title}" onclick="openLightbox(this.src)" loading="lazy">
+            </div>
+            <div class="card-body">
+                <p class="card-desc">${item.desc}</p>
+            </div>
+            <div class="card-footer">
+                <span>Code: <code>code/${item.file.replace('results/', '')}.py</code></span>
+                <a href="results/${item.file}.png" target="_blank" class="btn-view">Full Screenshot &nearr;</a>
+            </div>
+        </div>
+    `).join('');
+}
+
+render(experiments);
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    if (!q) {
+        render(experiments);
+        return;
+    }
+    const filtered = experiments.filter(ex => 
+        ex.title.toLowerCase().includes(q) || 
+        ex.desc.toLowerCase().includes(q) || 
+        ex.id.toString() === q
+    );
+    render(filtered);
+});
+
+function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('active');
+}
+
+function closeLightbox(e) {
+    if (e.target.id === 'lightbox' || e.target.id === 'lightbox-close') {
+        document.getElementById('lightbox').classList.remove('active');
+    }
+}
+</script>
+</body>
+</html>
